@@ -41,7 +41,7 @@ from typing import Any, Self
 
 __all__ = ["FSize"]
 
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 class FSize(float):
     """Represents a file size in bytes.

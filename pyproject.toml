@@ -2,13 +2,12 @@
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[package]
+[project]
 name = "fsize"
-version = "0.0.1"
 description = "A simple Python package to deal with file sizes."
 readme = "README.md"
 requires-python = ">=3.7"
-license = {text = "MIT"}
+license = "MIT"
 keywords = ["file", "size"]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -17,9 +16,13 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 authors = [
-    {name = "Seth Underwood", email = "@underwoo"}
+    {name = "Seth Underwood"}
 ]
+
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "fsize.__version__"}
