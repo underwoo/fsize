@@ -1,0 +1,15 @@
+{
+    "version": "0.2",
+    "language": "en",
+    "dictionaryDefinitions": [
+        {
+            "name": "custom",
+            "path": "custom-dictionary.txt",
+            "description": "Custom dictionary for project-specific terms",
+            "addWords": true,
+        },
+    ],
+    "dictionaries": [
+        "custom",
+    ]
+}
