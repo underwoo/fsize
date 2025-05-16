@@ -21,4 +21,3 @@ for number in numbers:
     print(f"number: {n:b}")
     print(f"{n:M} MiB")
     print("")
-

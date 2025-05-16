@@ -22,7 +22,7 @@
 [MAIN]
 
 # Files or directories to be skipped. They should be base names, not paths.
-ignore=third_party
+ignore=third_party,.venv,dist
 
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths.
@@ -147,7 +147,7 @@ disable=R,
 
 [REPORTS]
 
-# Set the output format. Available formats are text, parseable, colorized, msvs
+# Set the output format. Available formats are text, parsable, colorized, msvs
 # (visual studio) and html. You can also give a reporter class, eg
 # mypackage.mymodule.MyReporterClass.
 output-format=text

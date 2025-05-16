@@ -30,3 +30,6 @@ version = {attr = "fsize.__version__"}
 [tool.mypy]
 mypy_path = "src"
 packages = "fsize"
+
+[tool.black]
+line-length = 80

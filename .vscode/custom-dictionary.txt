@@ -1,6 +1,12 @@
 fsize
 kibibytes
 seealso
-setuptools
-underwoo
+
+# Python packages
 mypy
+pylint
+pytest
+setuptools
+
+# People
+underwoo

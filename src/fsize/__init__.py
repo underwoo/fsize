@@ -43,15 +43,17 @@ __all__ = ["FSize"]
 
 __version__ = "0.1.0"
 
+
 class FSize(float):
     """Represents a file size in bytes.
 
     A class to represent file sizes in bytes, with conversion capabilities to
     other units (KiB, MiB, GiB, TiB, PiB, EiB or KB, MB, GB, TB, PB, EB).
     """
+
     __convert__: float
 
-    def __new__(cls, value: Any, units: str="B") -> Self:
+    def __new__(cls, value: Any, units: str = "B") -> Self:
         """Create a new FSize instance.
 
         Create a new FSize instance, which is a subclass of float. The value is
@@ -68,12 +70,12 @@ class FSize(float):
         try:
             value = float(value)
         except ValueError as exc:
-            raise ValueError(f"could not convert value to "
-                             f"{cls.__name__}: '{value}'") from exc
+            raise ValueError(
+                f"could not convert value to " f"{cls.__name__}: '{value}'"
+            ) from exc
         # The value must be a positive number
         if value < 0:
-            raise ValueError(f"{cls.__name__} cannot be negative: "
-                             f"{value}")
+            raise ValueError(f"{cls.__name__} cannot be negative: " f"{value}")
         # Perform the conversion to Bytes based on the units given:
         re_units = re.compile(r"([KkMmGgTtPpEe])?(i)?[Bb]")
         in_units = re_units.match(units)
@@ -90,40 +92,15 @@ class FSize(float):
         elif in_units[1].upper() == "K":
             value *= convert
         elif in_units[1].upper() == "M":
-            value *= (
-                convert *
-                convert
-            )
+            value *= convert * convert
         elif in_units[1].upper() == "G":
-            value *= (
-                convert *
-                convert *
-                convert
-            )
+            value *= convert * convert * convert
         elif in_units[1].upper() == "T":
-            value *= (
-                convert *
-                convert *
-                convert *
-                convert
-            )
+            value *= convert * convert * convert * convert
         elif in_units[1].upper() == "P":
-            value *= (
-                convert *
-                convert *
-                convert *
-                convert *
-                convert
-            )
+            value *= convert * convert * convert * convert * convert
         elif in_units[1].upper() == "E":
-            value *= (
-                convert *
-                convert *
-                convert *
-                convert *
-                convert *
-                convert
-            )
+            value *= convert * convert * convert * convert * convert * convert
         else:
             raise ValueError(f"Unknown units: {units}")
         instance = super().__new__(cls, value)
@@ -190,19 +167,16 @@ class FSize(float):
         re_spec_width = r"(?P<width>\d+)?"
         re_spec_grouping = r"(?P<grouping>[_,])?"
         re_spec_unit = r"(?P<unit>[KkMmGgTtPpEe])?"
-        re_spec_format = (rf"{re_spec_width}"
-                          rf"{re_spec_grouping}"
-                          rf"{re_spec_unit}")
+        re_spec_format = (
+            rf"{re_spec_width}" rf"{re_spec_grouping}" rf"{re_spec_unit}"
+        )
 
         re_format_spec = re.compile(
-            r"^" +
-            rf"{re_spec_options}" +
-            rf"{re_spec_format}" +
-            r"i?[Bb]?$"
+            r"^" + rf"{re_spec_options}" + rf"{re_spec_format}" + r"i?[Bb]?$"
         )
 
         # Default values for format specifiers
-        fill= ""
+        fill = ""
         align = ""
         width = 0
         grouping = ""
@@ -210,20 +184,17 @@ class FSize(float):
 
         match = re_format_spec.match(format_spec)
         if match:
-            fill = match.group("fill") \
-                if match.group("fill") else fill
-            align = match.group("align") \
-                if match.group("align") else align
-            width = int(match.group("width"))\
-                if match.group("width") else width
-            grouping = match.group("grouping") \
-                if match.group("grouping") else grouping
-            unit = match.group("unit").upper() \
-                if match.group("unit") else unit
+            fill = match.group("fill") if match.group("fill") else fill
+            align = match.group("align") if match.group("align") else align
+            width = int(match.group("width")) if match.group("width") else width
+            grouping = (
+                match.group("grouping") if match.group("grouping") else grouping
+            )
+            unit = match.group("unit").upper() if match.group("unit") else unit
         else:
             raise ValueError(
                 f"Unknown format code '{format_spec}'",
-                f"for object of type '{self.__class__.__name__}'"
+                f"for object of type '{self.__class__.__name__}'",
             )
 
         # Convert the number to the appropriate unit
@@ -231,7 +202,7 @@ class FSize(float):
         if unit == "K":
             n = self.to_k()
         elif unit == "M":
-            n =  self.to_m()
+            n = self.to_m()
         elif unit == "G":
             n = self.to_g()
         elif unit == "T":
@@ -242,16 +213,16 @@ class FSize(float):
             n = self.to_e()
 
         out_format_spec = (
-            f"{fill}{align}{width}{grouping}" +
-            "." +
-            f"{max(0, width, math.ceil(math.log10(n)))}g"
+            f"{fill}{align}{width}{grouping}"
+            + "."
+            + f"{max(0, width, math.ceil(math.log10(n)))}g"
         )
         try:
             return f"{n:{out_format_spec}}"
         except Exception as exc:
             raise ValueError(
                 f"Unknown format code '{format_spec}'",
-                f"for object of type '{self.__class__.__name__}'"
+                f"for object of type '{self.__class__.__name__}'",
             ) from exc
 
     def to_bytes(self) -> float:
@@ -276,8 +247,7 @@ class FSize(float):
         Returns:
             float: The value in MB or MiB.
         """
-        return self.real / (self.__convert__ *
-                            self.__convert__)
+        return self.real / (self.__convert__ * self.__convert__)
 
     def to_g(self) -> float:
         """Return the value in GB or GiB.
@@ -285,9 +255,9 @@ class FSize(float):
         Returns:
             float: The value in GB or GiB.
         """
-        return self.real / (self.__convert__ *
-                            self.__convert__ *
-                            self.__convert__)
+        return self.real / (
+            self.__convert__ * self.__convert__ * self.__convert__
+        )
 
     def to_t(self) -> float:
         """Return the value in TB or TiB.
@@ -295,10 +265,12 @@ class FSize(float):
         Returns:
             float: The value in TB or TiB.
         """
-        return self.real / (self.__convert__ *
-                            self.__convert__ *
-                            self.__convert__ *
-                            self.__convert__)
+        return self.real / (
+            self.__convert__
+            * self.__convert__
+            * self.__convert__
+            * self.__convert__
+        )
 
     def to_p(self) -> float:
         """Return the value in PB or PiB.
@@ -306,11 +278,13 @@ class FSize(float):
         Returns:
             float: The value in PB or PiB.
         """
-        return self.real / (self.__convert__ *
-                            self.__convert__ *
-                            self.__convert__ *
-                            self.__convert__ *
-                            self.__convert__)
+        return self.real / (
+            self.__convert__
+            * self.__convert__
+            * self.__convert__
+            * self.__convert__
+            * self.__convert__
+        )
 
     def to_e(self) -> float:
         """Return the value in EB or EiB.
@@ -318,9 +292,11 @@ class FSize(float):
         Returns:
             float: The value in EB or EiB.
         """
-        return self.real / (self.__convert__ *
-                            self.__convert__ *
-                            self.__convert__ *
-                            self.__convert__ *
-                            self.__convert__ *
-                            self.__convert__)
+        return self.real / (
+            self.__convert__
+            * self.__convert__
+            * self.__convert__
+            * self.__convert__
+            * self.__convert__
+            * self.__convert__
+        )
