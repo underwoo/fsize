@@ -30,7 +30,7 @@ sign specifiers.
 
 An example would be `f"{size:4MiB}"` to display `size` with at least a width of
 4, but if the number is larger than 4 wide, e.g., `123345`, size will expand to
-ensure the number is not displayed using scientific notation.
+ensure the number is displayed without using scientific notation.
 
 Install
 -------
