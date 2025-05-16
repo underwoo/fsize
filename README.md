@@ -3,6 +3,11 @@ FSize: File size converter and formatter
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![Pylint](https://github.com/underwoo/fsize/actions/workflows/pylint.yml/badge.svg)
+![mypy](https://github.com/underwoo/fsize/actions/workflows/mypy.yml/badge.svg)
+![Pytest](https://github.com/underwoo/fsize/actions/workflows/pytest.yml/badge.svg)
+
 
 FSize is a class to simplify the use and conversion of numbers related to the
 computer sizes (e.g., file, disk, memory, etc).  FSize also has its own format
