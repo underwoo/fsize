@@ -17,7 +17,7 @@
      - name: Install mypy
        run: |
          python3 -m pip install --upgrade pip
-         python3 -m pip install mypy
+         python3 -m pip install -r requirements-dev.txt
      - name: Analyzing the code with mypy
        run: |
          mypy .
