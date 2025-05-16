@@ -3,3 +3,4 @@ kibibytes
 seealso
 setuptools
 underwoo
+mypy
