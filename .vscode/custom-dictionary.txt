@@ -1,5 +1,16 @@
 fsize
+kibibyte
+mebibyte
+gibibyte
+tebibyte
+pebibyte
+exbibyte
 kibibytes
+mebibytes
+gibibytes
+tebibytes
+pebibytes
+exbibytes
 seealso
 
 # Python packages

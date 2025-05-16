@@ -1,4 +1,4 @@
-# This Pylint rcfile contains a best-effort configuration to uphold the
+# This Pylint config contains a best-effort configuration to uphold the
 # best-practices and style described in the Google Python style guide:
 #   https://google.github.io/styleguide/pyguide.html
 #
@@ -18,6 +18,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# cspell:enableCompoundWords
+# cspell:ignore venv absl asdict msvs pytype functools rexec
+# cspell:ignoreRegExp [ir]div
+# cspell:ignoreRegExp [xy]range
+# cspell:ignoreRegExp my(package|module)
+
 
 [MAIN]
 
@@ -273,7 +280,7 @@ single-line-if-stmt=yes
 max-module-lines=99999
 
 # String used as indentation unit.  The internal Google style guide mandates 2
-# spaces.  Google's externaly-published style guide says 4, consistent with
+# spaces.  Google's externally-published style guide says 4, consistent with
 # PEP 8.
 indent-string='    '
 
