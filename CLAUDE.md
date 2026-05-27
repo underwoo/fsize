@@ -7,8 +7,8 @@ python3 -m venv .venv
 # Activate the virtual environment
 source .venv/bin/activate
 
-# Install dev dependencies into the local virtual environment
-pip install -r requirements-dev.txt
+# Install the package with dev dependencies into the local virtual environment
+pip install -e ".[dev]"
 
 # Install pre-commit hooks (runs black on commit)
 pre-commit install

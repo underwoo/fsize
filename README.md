@@ -44,6 +44,49 @@ pip install fsize
 However, this doesn't work yet, as FSize does not have a package uploaded
 anywhere.
 
+Contributing
+------------
+
+Contributions are welcome! To set up a local development environment:
+
+```bash
+# Clone the repository
+git clone https://github.com/underwoo/fsize.git
+cd fsize
+
+# Create and activate a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install the package in editable mode with dev dependencies
+pip install -e ".[dev]"
+
+# Install pre-commit hooks (runs black on every commit)
+pre-commit install
+```
+
+### Running checks
+
+```bash
+# Run all tests
+pytest
+
+# Run tests with coverage
+pytest --cov=fsize
+
+# Type checking
+mypy .
+
+# Linting
+pylint .
+
+# Format code
+black .
+```
+
+CI runs pytest, mypy, and pylint against Python 3.11, 3.12, and 3.13 on every
+push.
+
 Examples
 --------
 

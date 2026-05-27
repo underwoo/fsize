@@ -22,6 +22,17 @@ authors = [
 
 dynamic = ["version"]
 
+[project.optional-dependencies]
+dev = [
+    "black",
+    "build",
+    "mypy",
+    "pre-commit",
+    "pylint",
+    "pytest",
+    "pytest-cov",
+]
+
 [tool.setuptools.dynamic]
 version = {attr = "fsize.__version__"}
 
