@@ -22,6 +22,7 @@ The tests cover the following units:
 The tests also check for invalid units and ensure that the
 FSize class raises the appropriate exceptions.
 """
+
 import pytest
 
 from fsize import FSize
@@ -195,3 +196,187 @@ def test_invalid_unit_k():
     with pytest.raises(ValueError) as exc:
         FSize(1024, "k")
     assert "Unknown units: k" in str(exc.value)
+
+
+def test_invalid_string():
+    """Test initialization of FSize with a string that does not
+    convert to a valid size with units"""
+    with pytest.raises(ValueError) as exc:
+        FSize("MiB")
+    assert "could not convert value to FSize: 'MiB'" in str(exc.value)
+
+
+def test_invalid_string_two_dots():
+    """Test initialization of FSize with a string that does not
+    convert to a valid size, string has two dots"""
+    with pytest.raises(ValueError) as exc:
+        FSize(".2.34")
+    assert "could not convert value to FSize: '.2.34'" in str(exc.value)
+
+
+def test_string_with_binary_units():
+    """Test initialization of FSize with a string containing binary units"""
+    var = FSize("1.5 GiB")
+    assert var == FSize(1.5, "GiB")
+    assert var.__convert__ == 1024
+
+
+def test_string_with_decimal_units():
+    """Test initialization of FSize with a string containing decimal units"""
+    var = FSize("1024 KB")
+    assert var == FSize(1024, "KB")
+    assert var.__convert__ == 1000
+
+
+def test_string_no_units():
+    """Test initialization of FSize with a numeric string and no units"""
+    var = FSize("1024")
+    assert var == FSize(1024)
+    assert var.__convert__ == 1024
+
+
+def test_string_leading_whitespace():
+    """Test that a string with leading whitespace raises ValueError"""
+    with pytest.raises(ValueError):
+        FSize("  1.5 MiB")
+
+
+def test_string_empty():
+    """Test that an empty string raises ValueError"""
+    with pytest.raises(ValueError):
+        FSize("")
+
+
+def test_negative_value():
+    """Test that a negative value raises ValueError"""
+    with pytest.raises(ValueError) as exc:
+        FSize(-1)
+    assert "cannot be negative" in str(exc.value)
+
+
+def test_to_bytes():
+    """Test conversion to bytes"""
+    assert FSize(1024).to_bytes() == 1024.0
+    assert FSize(1, "KiB").to_bytes() == 1024.0
+    assert FSize(1, "KB").to_bytes() == 1000.0
+
+
+def test_to_k():
+    """Test conversion to kibibytes and kilobytes"""
+    assert FSize(1, "KiB").to_k() == 1.0
+    assert FSize(1, "MiB").to_k() == 1024.0
+    assert FSize(1, "KB").to_k() == 1.0
+    assert FSize(1, "MB").to_k() == 1000.0
+
+
+def test_to_m():
+    """Test conversion to mebibytes and megabytes"""
+    assert FSize(1, "MiB").to_m() == 1.0
+    assert FSize(1, "GiB").to_m() == 1024.0
+    assert FSize(1, "MB").to_m() == 1.0
+    assert FSize(1, "GB").to_m() == 1000.0
+
+
+def test_to_g():
+    """Test conversion to gibibytes and gigabytes"""
+    assert FSize(1, "GiB").to_g() == 1.0
+    assert FSize(1, "TiB").to_g() == 1024.0
+    assert FSize(1, "GB").to_g() == 1.0
+    assert FSize(1, "TB").to_g() == 1000.0
+
+
+def test_to_t():
+    """Test conversion to tebibytes and terabytes"""
+    assert FSize(1, "TiB").to_t() == 1.0
+    assert FSize(1, "PiB").to_t() == 1024.0
+    assert FSize(1, "TB").to_t() == 1.0
+    assert FSize(1, "PB").to_t() == 1000.0
+
+
+def test_to_p():
+    """Test conversion to pebibytes and petabytes"""
+    assert FSize(1, "PiB").to_p() == 1.0
+    assert FSize(1, "EiB").to_p() == 1024.0
+    assert FSize(1, "PB").to_p() == 1.0
+    assert FSize(1, "EB").to_p() == 1000.0
+
+
+def test_to_e():
+    """Test conversion to exbibytes and exabytes"""
+    assert FSize(1, "EiB").to_e() == 1.0
+    assert FSize(1, "EB").to_e() == 1.0
+
+
+def test_binary_decimal_differ():
+    """Test that binary and decimal conversions produce different byte counts"""
+    assert FSize(1, "KiB").to_bytes() == 1024.0
+    assert FSize(1, "KB").to_bytes() == 1000.0
+    assert FSize(1, "KiB").to_bytes() != FSize(1, "KB").to_bytes()
+
+
+def test_str():
+    """Test string representation of FSize"""
+    assert str(FSize(1024)) == "1024.0"
+    assert str(FSize(1.5)) == "1.5"
+
+
+def test_repr():
+    """Test repr of FSize matches str"""
+    assert repr(FSize(1024)) == "1024.0"
+    assert repr(FSize(1024)) == str(FSize(1024))
+
+
+def test_arithmetic_returns_float():
+    """Test that arithmetic on FSize returns plain float, not FSize"""
+    result = FSize(1024) + FSize(1024)
+    assert result == 2048.0
+    assert type(result) is float
+    assert not isinstance(result, FSize)
+
+
+def test_format_unit():
+    """Test basic unit conversion in format spec"""
+    assert f"{FSize(1024 * 1024):K}" == "1024"
+    assert f"{FSize(1024 * 1024):M}" == "1"
+
+
+def test_format_ib_suffix_accepted():
+    """Test that iB suffix in format spec is accepted and ignored"""
+    assert f"{FSize(1024 * 1024):MiB}" == f"{FSize(1024 * 1024):M}"
+    assert f"{FSize(1024 * 1024):MB}" == f"{FSize(1024 * 1024):M}"
+
+
+def test_format_width():
+    """Test width specifier in format spec"""
+    assert f"{FSize(1024):8K}" == "       1"
+
+
+def test_format_align():
+    """Test alignment specifier in format spec"""
+    assert f"{FSize(1024):<8K}" == "1       "
+    assert f"{FSize(1024):>8K}" == "       1"
+
+
+def test_format_fill_and_align():
+    """Test fill character with alignment in format spec"""
+    assert f"{FSize(1024):*>8K}" == "*******1"
+    assert f"{FSize(1024):0<8K}" == "10000000"
+
+
+def test_format_grouping():
+    """Test grouping separator in format spec"""
+    assert f"{FSize(1024 * 1024 * 1024):,K}" == "1,048,576"
+
+
+def test_format_decimal():
+    """Test format with a decimal-mode FSize"""
+    assert f"{FSize(1, 'MB'):M}" == "1"
+    assert f"{FSize(1, 'KB'):K}" == "1"
+
+
+def test_format_invalid():
+    """Test that an invalid format spec raises ValueError"""
+    with pytest.raises(ValueError):
+        FSize(1024).__format__("5.2f")
+    with pytest.raises(ValueError):
+        FSize(1024).__format__("f")

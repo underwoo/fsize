@@ -11,5 +11,8 @@
     ],
     "dictionaries": [
         "custom",
+    ],
+    "enabledLanguageIds": [
+        "python",
     ]
 }

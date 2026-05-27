@@ -41,7 +41,7 @@ from typing import Any, Self
 
 __all__ = ["FSize"]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
 class FSize(float):
@@ -66,8 +66,18 @@ class FSize(float):
                 "TiB", "PiB", "EiB" or "KB", "MB", "GB", "TB", "PB", "EB".  The
                 default is "KiB".
         """
-        # Check if the value can be cast to a float
         try:
+            if isinstance(value, str):
+                str_re = re.compile(
+                    r"(\d*\.?\d+)\s*([KkMmGgTtPpEe]i?[Bb])?\s*$"
+                )
+                m = str_re.match(value)
+                if m is None:
+                    raise (ValueError)
+                value = m.group(1)
+                if m.group(2) is not None:
+                    units = m.group(2)
+            # Check if the value can be cast to a float
             value = float(value)
         except ValueError as exc:
             raise ValueError(
@@ -159,7 +169,6 @@ class FSize(float):
         .. _Python Format Specification Mini-Language:
            https://docs.python.org/3/library/string.html#format-specification-mini-language
         """
-        print(f"format_spec: {format_spec}")
         re_spec_fill = r"(?P<fill>.)??"
         re_spec_align = r"(?P<align>[<>^])?"
         re_spec_options = rf"(?:{re_spec_fill}{re_spec_align})"

@@ -18,6 +18,10 @@ mypy
 pylint
 pytest
 setuptools
+docstrings
+pylintrc
+pyproject
+venv
 
 # People
 underwoo
