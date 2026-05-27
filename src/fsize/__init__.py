@@ -73,7 +73,7 @@ class FSize(float):
                 )
                 m = str_re.match(value)
                 if m is None:
-                    raise (ValueError)
+                    raise ValueError
                 value = m.group(1)
                 if m.group(2) is not None:
                     units = m.group(2)

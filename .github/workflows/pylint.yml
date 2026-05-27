@@ -17,7 +17,7 @@
      - name: Install pylint
        run: |
          python3 -m pip install --upgrade pip
-         python3 -m pip install pylint
+         python3 -m pip install ".[dev]"
      - name: Analyzing the code with pylint
        run: |
          pylint .

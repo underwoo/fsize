@@ -17,7 +17,7 @@
      - name: Install pytest
        run: |
          python3 -m pip install --upgrade pip
-         python3 -m pip install pytest
+         python3 -m pip install ".[dev]"
      - name: Analyzing the code with pytest
        run: |
          pytest

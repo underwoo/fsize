@@ -330,7 +330,7 @@ def test_arithmetic_returns_float():
     """Test that arithmetic on FSize returns plain float, not FSize"""
     result = FSize(1024) + FSize(1024)
     assert result == 2048.0
-    assert type(result) is float
+    assert isinstance(result, float)
     assert not isinstance(result, FSize)
 
 
@@ -370,13 +370,13 @@ def test_format_grouping():
 
 def test_format_decimal():
     """Test format with a decimal-mode FSize"""
-    assert f"{FSize(1, 'MB'):M}" == "1"
-    assert f"{FSize(1, 'KB'):K}" == "1"
+    assert f"{FSize(1, "MB"):M}" == "1"
+    assert f"{FSize(1, "KB"):K}" == "1"
 
 
 def test_format_invalid():
     """Test that an invalid format spec raises ValueError"""
     with pytest.raises(ValueError):
-        FSize(1024).__format__("5.2f")
+        format(FSize(1024), "5.2f")
     with pytest.raises(ValueError):
-        FSize(1024).__format__("f")
+        format(FSize(1024), "f")
