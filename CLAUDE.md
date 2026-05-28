@@ -76,13 +76,28 @@ construction time.
 - Naming: `snake_case` for functions/variables/arguments, `PascalCase` for
   classes.
 
+## Pre-Commit Requirements
+
+**All of the following must pass before committing any change:**
+
+```bash
+.venv/bin/pytest        # all tests must pass
+.venv/bin/mypy .        # no type errors
+.venv/bin/pylint .      # no lint errors
+```
+
+These mirror the three GitHub Actions CI workflows (`.github/workflows/pytest.yml`,
+`mypy.yml`, `pylint.yml`) that run on every push against Python 3.11, 3.12, and
+3.13. A commit that breaks any of these checks must not be pushed.
+
 ## Testing
 
 Tests live in `tests/test_fsize_init.py`. The package is installed in
 `importlib` mode with `src/` on the Python path (configured in `pyproject.toml`
 under `[tool.pytest.ini_options]`).
 
-CI runs pytest against Python 3.11, 3.12, and 3.13 on every push.
+CI runs pytest, mypy, and pylint against Python 3.11, 3.12, and 3.13 on every
+push.
 
 ## Package Configuration
 
