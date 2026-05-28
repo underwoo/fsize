@@ -370,8 +370,8 @@ def test_format_grouping():
 
 def test_format_decimal():
     """Test format with a decimal-mode FSize"""
-    assert f"{FSize(1, "MB"):M}" == "1"
-    assert f"{FSize(1, "KB"):K}" == "1"
+    assert format(FSize(1, "MB"), "M") == "1"
+    assert format(FSize(1, "KB"), "K") == "1"
 
 
 def test_format_invalid():
