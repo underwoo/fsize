@@ -393,8 +393,12 @@ def test_format_decimal():
 
 
 def test_format_invalid():
-    """Test that an invalid format spec raises ValueError"""
-    with pytest.raises(ValueError):
+    """Test that an invalid format spec raises ValueError with a message"""
+    with pytest.raises(ValueError) as exc:
         format(FSize(1024), "5.2f")
-    with pytest.raises(ValueError):
+    assert "Unknown format code '5.2f'" in str(exc.value)
+    assert "FSize" in str(exc.value)
+    with pytest.raises(ValueError) as exc:
         format(FSize(1024), "f")
+    assert "Unknown format code 'f'" in str(exc.value)
+    assert "FSize" in str(exc.value)
