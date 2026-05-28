@@ -25,6 +25,9 @@ FSize class raises the appropriate exceptions.
 
 import pytest
 
+# Tests intentionally inspect the internal _convert attribute to verify
+# that the correct conversion factor is selected at construction time.
+# pylint: disable=protected-access
 from fsize import FSize
 
 
@@ -33,11 +36,11 @@ def test_byte():
     var1 = FSize(1024)
     assert isinstance(var1, FSize)
     assert var1 == 1024
-    assert var1.__convert__ == 1024
+    assert var1._convert == 1024
     var2 = FSize(123456789.0)
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0
-    assert var2.__convert__ == 1024
+    assert var2._convert == 1024
 
 
 def test_kilobyte():
@@ -45,11 +48,11 @@ def test_kilobyte():
     var1 = FSize(1024, "kb")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1000
-    assert var1.__convert__ == 1000
+    assert var1._convert == 1000
     var2 = FSize(123456789.0, "KB")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1000
-    assert var2.__convert__ == 1000
+    assert var2._convert == 1000
 
 
 def test_megabyte():
@@ -57,11 +60,11 @@ def test_megabyte():
     var1 = FSize(1024, "mb")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1000 * 1000
-    assert var1.__convert__ == 1000
+    assert var1._convert == 1000
     var2 = FSize(123456789.0, "MB")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1000 * 1000
-    assert var2.__convert__ == 1000
+    assert var2._convert == 1000
 
 
 def test_gigabyte():
@@ -69,11 +72,11 @@ def test_gigabyte():
     var1 = FSize(1024, "gb")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1000 * 1000 * 1000
-    assert var1.__convert__ == 1000
+    assert var1._convert == 1000
     var2 = FSize(123456789.0, "GB")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1000 * 1000 * 1000
-    assert var2.__convert__ == 1000
+    assert var2._convert == 1000
 
 
 def test_terabyte():
@@ -81,11 +84,11 @@ def test_terabyte():
     var1 = FSize(1024, "tb")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1000 * 1000 * 1000 * 1000
-    assert var1.__convert__ == 1000
+    assert var1._convert == 1000
     var2 = FSize(123456789.0, "TB")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1000 * 1000 * 1000 * 1000
-    assert var2.__convert__ == 1000
+    assert var2._convert == 1000
 
 
 def test_petabyte():
@@ -93,11 +96,11 @@ def test_petabyte():
     var1 = FSize(1024, "pb")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1000 * 1000 * 1000 * 1000 * 1000
-    assert var1.__convert__ == 1000
+    assert var1._convert == 1000
     var2 = FSize(123456789.0, "PB")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1000 * 1000 * 1000 * 1000 * 1000
-    assert var2.__convert__ == 1000
+    assert var2._convert == 1000
 
 
 def test_exabyte():
@@ -105,11 +108,11 @@ def test_exabyte():
     var1 = FSize(1024, "eb")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1000 * 1000 * 1000 * 1000 * 1000 * 1000
-    assert var1.__convert__ == 1000
+    assert var1._convert == 1000
     var2 = FSize(123456789.0, "EB")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1000 * 1000 * 1000 * 1000 * 1000 * 1000
-    assert var2.__convert__ == 1000
+    assert var2._convert == 1000
 
 
 def test_kibibyte():
@@ -117,11 +120,11 @@ def test_kibibyte():
     var1 = FSize(1024, "KiB")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1024
-    assert var1.__convert__ == 1024
+    assert var1._convert == 1024
     var2 = FSize(123456789.0, "Kib")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1024
-    assert var2.__convert__ == 1024
+    assert var2._convert == 1024
 
 
 def test_mebibyte():
@@ -129,11 +132,11 @@ def test_mebibyte():
     var1 = FSize(1024, "MiB")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1024 * 1024
-    assert var1.__convert__ == 1024
+    assert var1._convert == 1024
     var2 = FSize(123456789.0, "Mib")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1024 * 1024
-    assert var2.__convert__ == 1024
+    assert var2._convert == 1024
 
 
 def test_gibibyte():
@@ -141,11 +144,11 @@ def test_gibibyte():
     var1 = FSize(1024, "GiB")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1024 * 1024 * 1024
-    assert var1.__convert__ == 1024
+    assert var1._convert == 1024
     var2 = FSize(123456789.0, "Gib")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1024 * 1024 * 1024
-    assert var2.__convert__ == 1024
+    assert var2._convert == 1024
 
 
 def test_tebibyte():
@@ -153,11 +156,11 @@ def test_tebibyte():
     var1 = FSize(1024, "TiB")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1024 * 1024 * 1024 * 1024
-    assert var1.__convert__ == 1024
+    assert var1._convert == 1024
     var2 = FSize(123456789.0, "Tib")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1024 * 1024 * 1024 * 1024
-    assert var2.__convert__ == 1024
+    assert var2._convert == 1024
 
 
 def test_pebibyte():
@@ -165,11 +168,11 @@ def test_pebibyte():
     var1 = FSize(1024, "PiB")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1024 * 1024 * 1024 * 1024 * 1024
-    assert var1.__convert__ == 1024
+    assert var1._convert == 1024
     var2 = FSize(123456789.0, "Pib")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1024 * 1024 * 1024 * 1024 * 1024
-    assert var2.__convert__ == 1024
+    assert var2._convert == 1024
 
 
 def test_exbibyte():
@@ -177,11 +180,11 @@ def test_exbibyte():
     var1 = FSize(1024, "EiB")
     assert isinstance(var1, FSize)
     assert var1 == 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024
-    assert var1.__convert__ == 1024
+    assert var1._convert == 1024
     var2 = FSize(123456789.0, "Eib")
     assert isinstance(var2, FSize)
     assert var2 == 123456789.0 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024
-    assert var2.__convert__ == 1024
+    assert var2._convert == 1024
 
 
 def test_invalid_unit():
@@ -196,6 +199,13 @@ def test_invalid_unit_k():
     with pytest.raises(ValueError) as exc:
         FSize(1024, "k")
     assert "Unknown units: k" in str(exc.value)
+
+
+def test_invalid_unit_trailing_garbage():
+    """Test that units with trailing characters are rejected"""
+    with pytest.raises(ValueError) as exc:
+        FSize(1024, "KBfoo")
+    assert "Unknown units: KBfoo" in str(exc.value)
 
 
 def test_invalid_string():
@@ -218,21 +228,28 @@ def test_string_with_binary_units():
     """Test initialization of FSize with a string containing binary units"""
     var = FSize("1.5 GiB")
     assert var == FSize(1.5, "GiB")
-    assert var.__convert__ == 1024
+    assert var._convert == 1024
 
 
 def test_string_with_decimal_units():
     """Test initialization of FSize with a string containing decimal units"""
     var = FSize("1024 KB")
     assert var == FSize(1024, "KB")
-    assert var.__convert__ == 1000
+    assert var._convert == 1000
 
 
 def test_string_no_units():
     """Test initialization of FSize with a numeric string and no units"""
     var = FSize("1024")
     assert var == FSize(1024)
-    assert var.__convert__ == 1024
+    assert var._convert == 1024
+
+
+def test_string_bare_b_unit():
+    """Test initialization of FSize with a string containing bare 'B' unit"""
+    assert FSize("1024 B") == FSize(1024)
+    assert FSize("1024 b") == FSize(1024)
+    assert FSize("1024 B")._convert == 1024
 
 
 def test_string_leading_whitespace():
@@ -252,7 +269,7 @@ def test_zero():
     var = FSize(0)
     assert isinstance(var, FSize)
     assert var == 0
-    assert var.__convert__ == 1024
+    assert var._convert == 1024
     assert var.to_bytes() == 0.0
     assert var.to_k() == 0.0
     assert var.to_m() == 0.0
@@ -339,9 +356,9 @@ def test_str():
 
 
 def test_repr():
-    """Test repr of FSize matches str"""
-    assert repr(FSize(1024)) == "1024.0"
-    assert repr(FSize(1024)) == str(FSize(1024))
+    """Test repr of FSize includes class name and value"""
+    assert repr(FSize(1024)) == "FSize(1024.0)"
+    assert repr(FSize(1.5)) == "FSize(1.5)"
 
 
 def test_arithmetic_returns_float():

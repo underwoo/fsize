@@ -43,6 +43,24 @@ __all__ = ["FSize"]
 
 __version__ = "0.2.0"
 
+_UNIT_POWERS: dict[str, int] = {
+    "K": 1,
+    "M": 2,
+    "G": 3,
+    "T": 4,
+    "P": 5,
+    "E": 6,
+}
+
+_RE_STR_PARSE = re.compile(
+    r"(\d*\.?\d+)\s*(?:([KkMmGgTtPpEe]i?[Bb])|[Bb])?\s*$"
+)
+_RE_UNITS = re.compile(r"([KkMmGgTtPpEe])?(i)?[Bb]$")
+_RE_FORMAT_SPEC = re.compile(
+    r"^(?:(?P<fill>.)??(?P<align>[<>^])?)"
+    r"(?P<width>\d+)?(?P<grouping>[_,])?(?P<unit>[KkMmGgTtPpEe])?i?[Bb]?$"
+)
+
 
 class FSize(float):
     """Represents a file size in bytes.
@@ -51,27 +69,24 @@ class FSize(float):
     other units (KiB, MiB, GiB, TiB, PiB, EiB or KB, MB, GB, TB, PB, EB).
     """
 
-    __convert__: float
+    _convert: float
 
     def __new__(cls, value: Any, units: str = "B") -> Self:
         """Create a new FSize instance.
 
         Create a new FSize instance, which is a subclass of float. The value is
-        converted to bytes based on the units given. The default is Bytes
-        (Kibibytes).
+        converted to bytes based on the units given. The default unit is
+        Bytes ("B").
 
         Args:
             value (Any): The size of a file or file system.
             units (str): The units of the value. Can be "KiB", "MiB", "GiB",
-                "TiB", "PiB", "EiB" or "KB", "MB", "GB", "TB", "PB", "EB".  The
-                default is "KiB".
+                "TiB", "PiB", "EiB" or "KB", "MB", "GB", "TB", "PB", "EB".
+                The default is "B" (Bytes).
         """
         try:
             if isinstance(value, str):
-                str_re = re.compile(
-                    r"(\d*\.?\d+)\s*([KkMmGgTtPpEe]i?[Bb])?\s*$"
-                )
-                m = str_re.match(value)
+                m = _RE_STR_PARSE.match(value)
                 if m is None:
                     raise ValueError
                 value = m.group(1)
@@ -81,40 +96,23 @@ class FSize(float):
             value = float(value)
         except ValueError as exc:
             raise ValueError(
-                f"could not convert value to " f"{cls.__name__}: '{value}'"
+                f"could not convert value to {cls.__name__}: '{value}'"
             ) from exc
         # The value must be a positive number
         if value < 0:
-            raise ValueError(f"{cls.__name__} cannot be negative: " f"{value}")
+            raise ValueError(f"{cls.__name__} cannot be negative: {value}")
         # Perform the conversion to Bytes based on the units given:
-        re_units = re.compile(r"([KkMmGgTtPpEe])?(i)?[Bb]")
-        in_units = re_units.match(units)
+        in_units = _RE_UNITS.match(units)
         if in_units is None:
             raise ValueError(f"Unknown units: {units}")
-        if in_units[2] or in_units[1] is None:
-            # The string contains the "i", or the units are "B" (no
-            # size prefix)
-            convert = 1024
-        else:
-            convert = 1000
-        if in_units[1] is None:
-            pass
-        elif in_units[1].upper() == "K":
-            value *= convert
-        elif in_units[1].upper() == "M":
-            value *= convert * convert
-        elif in_units[1].upper() == "G":
-            value *= convert * convert * convert
-        elif in_units[1].upper() == "T":
-            value *= convert * convert * convert * convert
-        elif in_units[1].upper() == "P":
-            value *= convert * convert * convert * convert * convert
-        elif in_units[1].upper() == "E":
-            value *= convert * convert * convert * convert * convert * convert
-        else:
-            raise ValueError(f"Unknown units: {units}")
+        has_i = in_units[2] is not None
+        no_prefix = in_units[1] is None
+        convert = 1024 if (has_i or no_prefix) else 1000
+        if in_units[1] is not None:
+            prefix = in_units[1].upper()
+            value *= convert ** _UNIT_POWERS[prefix]
         instance = super().__new__(cls, value)
-        instance.__convert__ = convert
+        instance._convert = convert
         return instance
 
     def __str__(self) -> str:
@@ -126,12 +124,12 @@ class FSize(float):
         return f"{self.real}"
 
     def __repr__(self) -> str:
-        """Return the string representation of the FSize value.
+        """Return an unambiguous representation of the FSize value.
 
         Returns:
-            str: The string representation of the FSize value.
+            str: A representation that identifies the type and value.
         """
-        return self.__str__()
+        return f"FSize({self.real})"
 
     def __format__(self, format_spec: str) -> str:
         """Format the FSize value.
@@ -169,21 +167,6 @@ class FSize(float):
         .. _Python Format Specification Mini-Language:
            https://docs.python.org/3/library/string.html#format-specification-mini-language
         """
-        re_spec_fill = r"(?P<fill>.)??"
-        re_spec_align = r"(?P<align>[<>^])?"
-        re_spec_options = rf"(?:{re_spec_fill}{re_spec_align})"
-
-        re_spec_width = r"(?P<width>\d+)?"
-        re_spec_grouping = r"(?P<grouping>[_,])?"
-        re_spec_unit = r"(?P<unit>[KkMmGgTtPpEe])?"
-        re_spec_format = (
-            rf"{re_spec_width}" rf"{re_spec_grouping}" rf"{re_spec_unit}"
-        )
-
-        re_format_spec = re.compile(
-            r"^" + rf"{re_spec_options}" + rf"{re_spec_format}" + r"i?[Bb]?$"
-        )
-
         # Default values for format specifiers
         fill = ""
         align = ""
@@ -191,7 +174,7 @@ class FSize(float):
         grouping = ""
         unit = "K"
 
-        match = re_format_spec.match(format_spec)
+        match = _RE_FORMAT_SPEC.match(format_spec)
         if match:
             fill = match.group("fill") if match.group("fill") else fill
             align = match.group("align") if match.group("align") else align
@@ -250,7 +233,7 @@ class FSize(float):
         Returns:
             float: The value in KB or KiB.
         """
-        return self.real / self.__convert__
+        return self.real / self._convert
 
     def to_m(self) -> float:
         """Return the value in MB or MiB.
@@ -258,7 +241,7 @@ class FSize(float):
         Returns:
             float: The value in MB or MiB.
         """
-        return self.real / (self.__convert__ * self.__convert__)
+        return self.real / self._convert**2
 
     def to_g(self) -> float:
         """Return the value in GB or GiB.
@@ -266,9 +249,7 @@ class FSize(float):
         Returns:
             float: The value in GB or GiB.
         """
-        return self.real / (
-            self.__convert__ * self.__convert__ * self.__convert__
-        )
+        return self.real / self._convert**3
 
     def to_t(self) -> float:
         """Return the value in TB or TiB.
@@ -276,12 +257,7 @@ class FSize(float):
         Returns:
             float: The value in TB or TiB.
         """
-        return self.real / (
-            self.__convert__
-            * self.__convert__
-            * self.__convert__
-            * self.__convert__
-        )
+        return self.real / self._convert**4
 
     def to_p(self) -> float:
         """Return the value in PB or PiB.
@@ -289,13 +265,7 @@ class FSize(float):
         Returns:
             float: The value in PB or PiB.
         """
-        return self.real / (
-            self.__convert__
-            * self.__convert__
-            * self.__convert__
-            * self.__convert__
-            * self.__convert__
-        )
+        return self.real / self._convert**5
 
     def to_e(self) -> float:
         """Return the value in EB or EiB.
@@ -303,11 +273,4 @@ class FSize(float):
         Returns:
             float: The value in EB or EiB.
         """
-        return self.real / (
-            self.__convert__
-            * self.__convert__
-            * self.__convert__
-            * self.__convert__
-            * self.__convert__
-            * self.__convert__
-        )
+        return self.real / self._convert**6
