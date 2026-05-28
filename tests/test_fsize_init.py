@@ -247,6 +247,24 @@ def test_string_empty():
         FSize("")
 
 
+def test_zero():
+    """Test that zero is a valid size"""
+    var = FSize(0)
+    assert isinstance(var, FSize)
+    assert var == 0
+    assert var.__convert__ == 1024
+    assert var.to_bytes() == 0.0
+    assert var.to_k() == 0.0
+    assert var.to_m() == 0.0
+    assert str(var) == "0.0"
+    assert FSize("0") == FSize(0)
+    assert FSize(0, "KB") == 0
+    assert format(FSize(0), "K") == "0"
+    assert format(FSize(0), "M") == "0"
+    assert FSize(0, "GiB") == 0
+    assert format(FSize(0), "K") == "0"
+
+
 def test_negative_value():
     """Test that a negative value raises ValueError"""
     with pytest.raises(ValueError) as exc:

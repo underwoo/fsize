@@ -202,8 +202,8 @@ class FSize(float):
             unit = match.group("unit").upper() if match.group("unit") else unit
         else:
             raise ValueError(
-                f"Unknown format code '{format_spec}'",
-                f"for object of type '{self.__class__.__name__}'",
+                f"Unknown format code '{format_spec}' "
+                f"for object of type '{self.__class__.__name__}'"
             )
 
         # Convert the number to the appropriate unit
@@ -221,17 +221,19 @@ class FSize(float):
         elif unit == "E":
             n = self.to_e()
 
+        log_digits = math.ceil(math.log10(n)) if n > 0 else 0
         out_format_spec = (
             f"{fill}{align}{width}{grouping}"
             + "."
-            + f"{max(0, width, math.ceil(math.log10(n)))}g"
+            + str(max(0, width, log_digits))
+            + "g"
         )
         try:
             return f"{n:{out_format_spec}}"
         except Exception as exc:
             raise ValueError(
-                f"Unknown format code '{format_spec}'",
-                f"for object of type '{self.__class__.__name__}'",
+                f"Unknown format code '{format_spec}' "
+                f"for object of type '{self.__class__.__name__}'"
             ) from exc
 
     def to_bytes(self) -> float:
