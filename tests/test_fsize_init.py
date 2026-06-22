@@ -442,6 +442,23 @@ def test_format_empty_spec():
     assert format(z, "") == str(z)
 
 
+def test_format_all_units():
+    """Test that every unit in _UNIT_POWERS works via format."""
+    # Binary FSize (1 EiB)
+    val = FSize(1, "EiB")
+    assert format(val, "E") == "1"
+    assert format(val, "P") == "1024"
+    assert format(val, "T") == str(1024**2)
+    assert format(val, "G") == str(1024**3)
+    assert format(val, "M") == str(1024**4)
+    assert format(val, "K") == str(1024**5)
+    # Decimal FSize (1 EB)
+    val_dec = FSize(1, "EB")
+    assert format(val_dec, "E") == "1"
+    assert float(format(val_dec, "P")) == 1000
+    assert float(format(val_dec, "K")) == 1000**5
+
+
 def test_format_combined_spec():
     """Test format with combined fill, align, width, grouping, and unit."""
     x = FSize(1_048_576)
@@ -458,3 +475,4 @@ def test_format_combined_spec():
     # Just unit (no optional fields)
     assert float(format(x, "KiB")) == pytest.approx(1024.0)
     assert float(format(x, "MiB")) == pytest.approx(1.0)
+
