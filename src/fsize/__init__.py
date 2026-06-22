@@ -200,7 +200,7 @@ class FSize(float):
             raise AssertionError(f"unhandled unit: {unit!r}")
         n = self.real / self._convert ** _UNIT_POWERS[unit]
 
-        log_digits = math.ceil(math.log10(n)) if n > 0 else 0
+        log_digits = math.floor(math.log10(n)) + 1 if n > 0 else 0
         out_format_spec = (
             f"{fill}{align}{width}{grouping}"
             + "."
