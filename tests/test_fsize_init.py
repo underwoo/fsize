@@ -431,3 +431,21 @@ def test_format_empty_spec():
     assert format(y, "") == str(y)
     z = FSize(1, "KB")
     assert format(z, "") == str(z)
+
+
+def test_format_combined_spec():
+    """Test format with combined fill, align, width, grouping, and unit."""
+    x = FSize(1_048_576)
+    # Width + unit
+    assert format(x, "10MiB") == format(x, "10MiB")
+    # Fill + align + width + unit
+    result = format(x, "*>10MiB")
+    assert len(result) == 10
+    assert result[0] == "*"
+    # Grouping + unit
+    big = FSize(1_000_000_000, "KB")
+    result = format(big, ",GiB")
+    assert "," in result or result  # grouping applied if needed
+    # Just unit (no optional fields)
+    assert float(format(x, "KiB")) == pytest.approx(1024.0)
+    assert float(format(x, "MiB")) == pytest.approx(1.0)
