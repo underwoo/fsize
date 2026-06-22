@@ -41,7 +41,7 @@ from typing import Any, Self
 
 __all__ = ["FSize"]
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 _UNIT_POWERS: dict[str, int] = {
     "K": 1,
