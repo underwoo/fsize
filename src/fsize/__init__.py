@@ -53,7 +53,7 @@ _UNIT_POWERS: dict[str, int] = {
 }
 
 _RE_STR_PARSE = re.compile(
-    r"(\d*\.?\d+)\s*(?:([KkMmGgTtPpEe]i?[Bb])|[Bb])?\s*$"
+    r"(\d*\.?\d+)\s*([KkMmGgTtPpEe]?i?[Bb])?\s*$"
 )
 _RE_UNITS = re.compile(r"([KkMmGgTtPpEe])?(i)?[Bb]$")
 _RE_FORMAT_SPEC = re.compile(
