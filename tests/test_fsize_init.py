@@ -252,6 +252,15 @@ def test_string_bare_b_unit():
     assert FSize("1024 B")._convert == 1024
 
 
+def test_string_bare_b_overrides_units_param():
+    """Test that bare 'B' in string overrides the units parameter"""
+    # Bare "B" should mean bytes, regardless of the units parameter
+    assert FSize("1024 B", "MB") == 1024
+    assert FSize("1024 B", "KiB") == 1024
+    assert FSize("1024 b", "GB") == 1024
+    assert FSize("1024 B", "MB")._convert == 1024
+
+
 def test_string_leading_whitespace():
     """Test that a string with leading whitespace raises ValueError"""
     with pytest.raises(ValueError):
