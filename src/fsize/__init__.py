@@ -53,7 +53,7 @@ _UNIT_POWERS: dict[str, int] = {
 }
 
 _RE_STR_PARSE = re.compile(
-    r"(\d*\.?\d+)\s*(?:([KkMmGgTtPpEe]i?[Bb])|[Bb])?\s*$"
+    r"(\d*\.?\d+)\s*([KkMmGgTtPpEe]?i?[Bb])?\s*$"
 )
 _RE_UNITS = re.compile(r"([KkMmGgTtPpEe])?(i)?[Bb]$")
 _RE_FORMAT_SPEC = re.compile(
@@ -180,13 +180,15 @@ class FSize(float):
 
         match = _RE_FORMAT_SPEC.match(format_spec)
         if match:
-            fill = match.group("fill") if match.group("fill") else fill
-            align = match.group("align") if match.group("align") else align
-            width = int(match.group("width")) if match.group("width") else width
-            grouping = (
-                match.group("grouping") if match.group("grouping") else grouping
+            fill = match.group("fill") or fill
+            align = match.group("align") or align
+            width = (
+                int(match.group("width"))
+                if match.group("width")
+                else width
             )
-            unit = match.group("unit").upper() if match.group("unit") else unit
+            grouping = match.group("grouping") or grouping
+            unit = (match.group("unit") or unit).upper()
         else:
             raise ValueError(
                 f"Unknown format code '{format_spec}' "
