@@ -431,3 +431,10 @@ def test_format_empty_spec():
     assert format(y, "") == str(y)
     z = FSize(1, "KB")
     assert format(z, "") == str(z)
+
+
+def test_format_no_scientific_notation():
+    """Test that exact powers of 10 do not produce scientific notation."""
+    assert format(FSize(10 * 1024), "K") == "10"
+    assert format(FSize(100 * 1024), "K") == "100"
+    assert format(FSize(1000 * 1024), "K") == "1000"
