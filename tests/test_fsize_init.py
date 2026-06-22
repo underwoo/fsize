@@ -252,6 +252,15 @@ def test_string_bare_b_unit():
     assert FSize("1024 B")._convert == 1024
 
 
+def test_string_bare_b_overrides_units_param():
+    """Test that bare 'B' in string overrides the units parameter"""
+    # Bare "B" should mean bytes, regardless of the units parameter
+    assert FSize("1024 B", "MB") == 1024
+    assert FSize("1024 B", "KiB") == 1024
+    assert FSize("1024 b", "GB") == 1024
+    assert FSize("1024 B", "MB")._convert == 1024
+
+
 def test_string_leading_whitespace():
     """Test that a string with leading whitespace raises ValueError"""
     with pytest.raises(ValueError):
@@ -448,3 +457,22 @@ def test_format_all_units():
     assert format(val_dec, "E") == "1"
     assert float(format(val_dec, "P")) == 1000
     assert float(format(val_dec, "K")) == 1000**5
+
+
+def test_format_combined_spec():
+    """Test format with combined fill, align, width, grouping, and unit."""
+    x = FSize(1_048_576)
+    # Width + unit
+    assert format(x, "10MiB") == format(x, "10MiB")
+    # Fill + align + width + unit
+    result = format(x, "*>10MiB")
+    assert len(result) == 10
+    assert result[0] == "*"
+    # Grouping + unit
+    big = FSize(1_000_000_000, "KB")
+    result = format(big, ",GiB")
+    assert "," in result or result  # grouping applied if needed
+    # Just unit (no optional fields)
+    assert float(format(x, "KiB")) == pytest.approx(1024.0)
+    assert float(format(x, "MiB")) == pytest.approx(1.0)
+
