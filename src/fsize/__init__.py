@@ -152,7 +152,8 @@ class FSize(float):
 
         Arguments:
             format_spec (str): The format specifier.  The default is "K", which
-                corresponds to the float format specifier ".4g".
+                corresponds to the float format specifier ".4g".  An empty
+                format_spec returns str(self) as per Python's data model.
 
         Returns:
             str: The formatted string.
@@ -167,6 +168,9 @@ class FSize(float):
         .. _Python Format Specification Mini-Language:
            https://docs.python.org/3/library/string.html#format-specification-mini-language
         """
+        if not format_spec:
+            return str(self)
+
         # Default values for format specifiers
         fill = ""
         align = ""

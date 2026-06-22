@@ -419,3 +419,15 @@ def test_format_invalid():
         format(FSize(1024), "f")
     assert "Unknown format code 'f'" in str(exc.value)
     assert "FSize" in str(exc.value)
+
+
+def test_format_empty_spec():
+    """Test that format with empty string equals str."""
+    x = FSize(1024)
+    assert format(x, "") == str(x)
+    assert f"{x}" == str(x)  # f-string with no spec
+    # Test with different units
+    y = FSize(1, "MiB")
+    assert format(y, "") == str(y)
+    z = FSize(1, "KB")
+    assert format(z, "") == str(z)
