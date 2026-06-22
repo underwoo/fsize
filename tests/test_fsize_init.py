@@ -442,6 +442,13 @@ def test_format_empty_spec():
     assert format(z, "") == str(z)
 
 
+def test_format_no_scientific_notation():
+    """Test that exact powers of 10 do not produce scientific notation."""
+    assert format(FSize(10 * 1024), "K") == "10"
+    assert format(FSize(100 * 1024), "K") == "100"
+    assert format(FSize(1000 * 1024), "K") == "1000"
+
+
 def test_format_all_units():
     """Test that every unit in _UNIT_POWERS works via format."""
     # Binary FSize (1 EiB)
