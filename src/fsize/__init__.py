@@ -196,19 +196,9 @@ class FSize(float):
             )
 
         # Convert the number to the appropriate unit
-        n = self.real
-        if unit == "K":
-            n = self.to_k()
-        elif unit == "M":
-            n = self.to_m()
-        elif unit == "G":
-            n = self.to_g()
-        elif unit == "T":
-            n = self.to_t()
-        elif unit == "P":
-            n = self.to_p()
-        elif unit == "E":
-            n = self.to_e()
+        if unit not in _UNIT_POWERS:
+            raise AssertionError(f"unhandled unit: {unit!r}")
+        n = self.real / self._convert ** _UNIT_POWERS[unit]
 
         log_digits = math.floor(math.log10(n)) + 1 if n > 0 else 0
         out_format_spec = (
