@@ -431,3 +431,20 @@ def test_format_empty_spec():
     assert format(y, "") == str(y)
     z = FSize(1, "KB")
     assert format(z, "") == str(z)
+
+
+def test_format_all_units():
+    """Test that every unit in _UNIT_POWERS works via format."""
+    # Binary FSize (1 EiB)
+    val = FSize(1, "EiB")
+    assert format(val, "E") == "1"
+    assert format(val, "P") == "1024"
+    assert format(val, "T") == str(1024**2)
+    assert format(val, "G") == str(1024**3)
+    assert format(val, "M") == str(1024**4)
+    assert format(val, "K") == str(1024**5)
+    # Decimal FSize (1 EB)
+    val_dec = FSize(1, "EB")
+    assert format(val_dec, "E") == "1"
+    assert float(format(val_dec, "P")) == 1000
+    assert float(format(val_dec, "K")) == 1000**5
