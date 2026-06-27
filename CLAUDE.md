@@ -101,6 +101,6 @@ push.
 
 ## Package Configuration
 
-- Version is sourced dynamically from `fsize.__version__` (currently `"0.1.0"`).
+- Version is sourced dynamically from `fsize.__version__` (currently `"0.4.0"`).
 - Build system: `setuptools`.
 - Requires Python ≥ 3.11 (uses `typing.Self`).
